@@ -1,8 +1,26 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #eee;
+  background-color: #212121;
+  color: #FFFFFF;
 }
+
+.form-control:focus{
+	border-color: #DD4201; 
+	box-shadow: 2px 2px 2px 2px; 
+	-webkit-box-shadow: 2px 2px 2px 2px; 
+	color: #DD4201;
+} 
+
+.has-error .form-control:focus{
+	box-shadow: none; 
+	-webkit-box-shadow: none;
+}
+
+.btn-color{
+	background-color:#212121;
+}
+
 
 .form-signin {
   max-width: 330px;
