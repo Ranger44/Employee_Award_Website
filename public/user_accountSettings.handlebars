@@ -8,19 +8,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-
-    <title>User - Welcome</title>
+    <title>User - Account Settings</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-
-	<link href="web3.css" rel="stylesheet">
 	
+	<link href="web3.css" rel="stylesheet">
+			
   </head>
 
   <body>
 	<div class="jumbotron jumbotron-fluid " >
 		<div class="container" style="color:white">
-			<h1 class="display-3"><b>Welcome</b></h1>
+			<h1 class="display-3"><b>Account Settings</b></h1>
 		</div>
 	</div>
 
@@ -38,36 +37,41 @@
 		</div>
 	</div>
 	</nav>
-
-	<br><div><h3>Previously Created Awards</h3></div>
-	<table class=" table table-hover table-dark">
 	
-		<thead>
-			<tr>
-				<td><b>Date</b></td>
-				<td><b>First Name</b></td>
-				<td><b>Last Name</b></td>
-				<td><b>Award Type</b></td>
-				<td><b>Email</b></td>
-				<td><b>Print Award</b></td>
-				<td><b>Delete Award</b></td>
-			</tr>
-		</thead>
-		<tbody>
-			<!--{{#each award}}-->
-			<tr>
-				<td>{{date}}</td>
-				<td>{{fname}}</td>
-				<td>{{lname}}</td>
-				<td>{{type}}</td>
-				<td>{{email}}</td>
-				<td><button>Print</button></td>
-				<td><button>Delete</button></td>
-			</tr>
-			<!--{{/each}}-->
-		</tbody>
-	</table>
-
-
+	
+	<form class="form-user" method="post">
+	  <div class="form-group row">
+		<label for="currentName" class="col-sm-4 col-form-label">Current Name:</label>
+		<div class="col-sm-8">
+		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="User's Name">
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-4 col-form-label">Change Name</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" id="nameChange" placeholder="Name">
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<div class="col-sm-10">
+		  <button type="submit" class="btn btn-secondary">Submit</button>
+		</div>
+	  </div>
+	</form>
+	
+	
+	<form class="form-user" id="upload-image-form" action="" method="post" enctype="multipart/form-data">
+	<p class="lead">Select a PNG or JPEG image</p>
+	  <div id="image-preview-div" style="display: none">
+		<label for="exampleInputFile">Selected image:</label>
+		<br>
+		<img id="preview-img" src="noimage">
+	  </div>
+	  <div class="form-group">
+		<input type="file" name="file" id="file" required>
+	  </div>
+	  <button class="btn btn-secondary" id="upload-button" type="submit">Upload Image</button>
+	</form>
+	
   </body>
 </html>
