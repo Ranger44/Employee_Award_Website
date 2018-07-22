@@ -21,6 +21,23 @@ body {
 	background-color:#212121;
 }
 
+.orange-nav-bar{
+	background-color: #DD4201;
+	margin-top:0;
+}
+
+.jumbotron{
+	padding-top:20px;
+	padding-bottom:0;
+	margin-bottom:0px;
+	margin-top:0px;
+	text-align: right;
+	background: transparent;
+	/*background-image: url(1200px-Oregon_State_Beavers_logo.svg.png); 
+	background-repeat: no-repeat;
+	background-size: 10%;
+	background-position: 50px 17px;*/
+}
 
 .form-signin {
   max-width: 330px;
