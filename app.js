@@ -4,6 +4,7 @@ var mysql = require('./dbcon.js');
 var handlebars = require('express-handlebars');
 var bodyParser = require("body-parser");
 var nodemailer = require('nodemailer');
+var session = require("express-session");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -16,6 +17,11 @@ app.engine('handlebars', handlebars({
 // Use helper functions if needed
 //helpers: require(__dirname + "/public/js/helpers.js").helpers,      
     partialsDir: __dirname + '/views/partials'
+}));
+app.use(session({
+	secret:'SuperSecretPassword',
+	resave: false,
+	saveUninitialized: true
 }));
 
 /*******************************************************
@@ -58,11 +64,10 @@ app.get('/',function(req,res){
 });
 
 app.post('/',function(req,res){
-	console.log(req.body.email);
-	console.log(req.body.password);
 	var context = {};
 	var msg = {};
-	mysql.pool.query('SELECT * FROM bsg_account WHERE username=?', [req.body.email], function(err, rows, fields){
+	mysql.pool.query('SELECT * FROM user_account WHERE username=? AND password=?', 
+		[req.body.email, req.body.password], function(err, rows, fields){
 		if(err){
 			next(err);
 			return;
@@ -70,14 +75,67 @@ app.post('/',function(req,res){
 		//console.log(rows[0]);
 		context = rows[0];
 
+		// User is not in database or password is incorrect
 		if (context == undefined) {
 			console.log("error: username does not exist");
 			msg.status = "Invalid username or password. Please try again.";
 			res.render("index", msg);
 		}
+
+		// User login successful
 		else {
-			res.render("index");
+			console.log("login successful");
+			req.session.user_id = context.id;
+			res.redirect('/settings');
 		}
+	})
+});
+
+app.get('/settings',function(req,res){
+	var context={};
+	mysql.pool.query('SELECT * FROM user_account WHERE id=?', [req.session.user_id], function(err, rows, fields){
+		context=rows[0];
+		res.render("user_accountSettings", context);
+	})	
+});
+
+app.post('/updateSettings', function(req,res){
+	mysql.pool.query('UPDATE user_account SET fname=?, lname=? WHERE id=?',
+		[req.body.fname, req.body.lname, req.session.user_id], function(err, rows, fields){
+			if(err){
+				next(err);
+				return;
+			}
+			res.redirect('/settings');
+		}
+	)
+})
+
+app.get('/reports',function(req,res){
+	mysql.pool.query('SELECT time, name, account_award.id, award.id AS a_id, email FROM user_account'
+					+' INNER JOIN account_award ON user_account.id = account_award.account_id'
+					+' INNER JOIN award ON account_award.award_id = award.id'
+					+' WHERE user_account.id = ?', [req.session.user_id], function(err, rows, fields){
+		var step;
+		for (step = 0; step < rows.length; step++) {
+			if (rows[step].a_id === 1)
+				rows[step].a_id = 'Employee of the Month';
+			else
+				rows[step].a_id = 'Employee of the Year';
+		}
+		context = {rows};
+		console.log(context);
+		res.render("user_welcome", context);
+	})	
+});
+
+app.post('/deleteReward' ,function(req,res){
+	mysql.pool.query('DELETE FROM account_award WHERE id=?', [req.body.id], function(err,rows,fields){
+		if(err){
+			next(err);
+			return;
+		}
+		res.redirect('/reports');
 	})
 });
 
