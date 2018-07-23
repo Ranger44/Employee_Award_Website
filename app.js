@@ -27,37 +27,18 @@ app.use(session({
 /*******************************************************
  NODEMAILER - for verification email on account creation
 ******************************************************/
-// let transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   secure: false,
-//   port: 25,
-//   auth: {
-//     user: 'noreply.group9@gmail.com',
-//     pass: 'wethebest'
-//   },
-//   tls: {
-//     rejectUnauthorized: false
-//   }
-// });
-
-
-// app.get('/',function(req,res){
-
-
-//   let HelperOptions = {
-//     from: '"Group9" <noreply.group9@gmail.com',
-//     to: 'noreply.group9@gmail.com',
-//     subject: 'Verfication Email',                                                                                         
-//     text: 'this is a test'
-//   };
-
-//  transporter.sendMail(HelperOptions, (error, info) => {
-//     if (error) {
-//       return console.log(error);
-//     }
-//   });
-//    res.render("index");
-// });
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  secure: false,
+  port: 25,
+  auth: {
+    user: 'noreply.group9@gmail.com',
+    pass: 'wethebest'
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
 
 app.get('/',function(req,res){
   	res.render("index");
@@ -112,17 +93,10 @@ app.post('/updateSettings', function(req,res){
 })
 
 app.get('/reports',function(req,res){
-	mysql.pool.query('SELECT time, name, account_award.id, award.id AS a_id, email FROM user_account'
+	mysql.pool.query('SELECT time, name, account_award.id, title, email FROM user_account'
 					+' INNER JOIN account_award ON user_account.id = account_award.account_id'
 					+' INNER JOIN award ON account_award.award_id = award.id'
 					+' WHERE user_account.id = ?', [req.session.user_id], function(err, rows, fields){
-		var step;
-		for (step = 0; step < rows.length; step++) {
-			if (rows[step].a_id === 1)
-				rows[step].a_id = 'Employee of the Month';
-			else
-				rows[step].a_id = 'Employee of the Year';
-		}
 		context = {rows};
 		console.log(context);
 		res.render("user_welcome", context);
@@ -140,8 +114,40 @@ app.post('/deleteReward' ,function(req,res){
 });
 
 app.get('/forgot_password',function(req,res){
- 	 res.render("forgot_password");
+ 	res.render("forgot_password");
 });
+
+app.post('/sendPassword', function(req, res){
+	console.log(req.body.email);
+	var msg={};
+
+	mysql.pool.query('SELECT * FROM user_account WHERE username=?', [req.body.email], function(err, rows, fields){
+		context=rows[0];
+
+		if (context == undefined) {
+			msg.status = "Email is not in database";
+			res.render("forgot_password", msg);
+		}
+		else {
+			let HelperOptions = {
+    			from: '"Group9" <noreply.group9@gmail.com',
+    			to: req.body.email,
+    			subject: 'Password Retriever',                                                                                         
+    			text: 'Your password is: ' + context.password
+  			};
+
+ 			transporter.sendMail(HelperOptions, (error, info) => {
+    			if (error) {
+      				return console.log(error);
+    			}
+    			else {
+    				msg.status = "Password has been sent";
+    				res.render("forgot_password", msg);
+    			}	
+  			});
+ 		}
+	})	
+})
 
 app.use(function(req,res){
 	res.render("404")
