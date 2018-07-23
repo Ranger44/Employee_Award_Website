@@ -24,20 +24,7 @@
 		</div>
 	</div>
 
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark orange-nav-bar">
-		<a class="navbar-brand" href="#">LYNX</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-			</button>
-	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-		<div class="navbar-nav">
-			<a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-			<a class="nav-item nav-link" href="#">Create New Award</a>
-			<a class="nav-item nav-link" href="#">Reports</a>
-			<a class="nav-item nav-link disabled" href="#">Account Settings</a>
-		</div>
-	</div>
-	</nav>
+	{{> navbar}}
 
 	<br><div><h3>Previously Created Awards</h3></div>
 	<table class=" table table-hover table-dark">
@@ -45,29 +32,27 @@
 		<thead>
 			<tr>
 				<td><b>Date</b></td>
-				<td><b>First Name</b></td>
-				<td><b>Last Name</b></td>
+				<td><b>Name</b></td>
 				<td><b>Award Type</b></td>
 				<td><b>Email</b></td>
 				<td><b>Print Award</b></td>
 				<td><b>Delete Award</b></td>
 			</tr>
 		</thead>
-		<tbody>
-			<!--{{#each award}}-->
+			{{#each rows}}
 			<tr>
-				<td>{{date}}</td>
-				<td>{{fname}}</td>
-				<td>{{lname}}</td>
-				<td>{{type}}</td>
-				<td>{{email}}</td>
+				<td>{{this.time}}</td>
+				<td>{{this.name}}</td>
+				<td>{{this.a_id}}</td>
+				<td>{{this.email}}</td>
 				<td><button>Print</button></td>
-				<td><button>Delete</button></td>
+				<form action="/deleteReward" method="POST">
+					<td><button name="id" value={{id}}>Delete</button></td>
+				</form>
 			</tr>
-			<!--{{/each}}-->
-		</tbody>
-	</table>
+			{{/each}}
 
+	</table>
 
   </body>
 </html>

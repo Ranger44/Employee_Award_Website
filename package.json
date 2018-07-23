@@ -12,7 +12,7 @@
     "body-parser": "^1.13.3",
     "express": "^4.13.2",
     "express-handlebars": "^2.0.1",
-    "express-session": "^1.11.3",
+    "express-session": "^1.15.6",
     "moment": "^2.22.2",
     "mysql": "^2.8.0",
     "nodemailer": "^4.6.7"
