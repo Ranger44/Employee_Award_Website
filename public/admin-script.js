@@ -1,4 +1,14 @@
 // Award
+function edit_row_award(current_row) {
+	console.log("Hit edit button id: " + current_row.parentNode.parentNode.cells[0].textContent);
+	window.location.href = "/admin_edit_aw?id=" + current_row.parentNode.parentNode.cells[0].textContent;
+	//var div_edit = document.getElementById("div_edit");
+	//if (div_edit.style.display === "none") {
+		//div_edit.style.display = "block";
+	//}
+	
+}
+
 function delete_row_award(current_row) {
 	var table = document.getElementById('award_table');
 	var req = new XMLHttpRequest();
@@ -27,3 +37,5 @@ function delete_row_award(current_row) {
 		}
 	}
 }
+
+

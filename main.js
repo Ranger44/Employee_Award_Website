@@ -37,6 +37,10 @@ app.use('/admin_delete_aw', function (req, res, next) {
 
 });
 
+app.use('/admin_edit_aw', function (req, res, next) {
+	editAward(req, res, next);
+});
+
 app.use('/admin_employee', function (req, res, next) {
 
 	res.render('admin_employee');
@@ -122,4 +126,43 @@ var deleteAward = function (req, res, next) {
 		//context.results = "Deleted " + result.changedRows + " rows.";
 		displayAwardData(res);
 	});
+};
+
+var editAward = function (req, res, next) {
+	var context = {};
+	var row_data = {};
+	row_data.award = [];
+
+	console.log("ID: %d", req.query.id);
+	mysql.pool.query("SELECT * FROM bsg_award WHERE id=?", [req.query.id], function (err, result) {
+		if (err) {
+			next(err);
+			return;
+		}
+
+		context.name = result[0].name;
+		context.description = result[0].description;
+		res.render('admin_award_edit', context);
+	});
+	/*
+	mysql.pool.query("SELECT * FROM bsg_award", function (err, rows, fields) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+
+		for (row in rows) {
+			simple_award = {};
+			simple_award.id = rows[row].id;
+			simple_award.name = rows[row].name;
+			simple_award.description = rows[row].description;
+
+			row_data.award.push(simple_award);
+		}
+
+		context.results = JSON.stringify(rows);
+		context.data = row_data;
+		res.render('admin_award_edit', context);
+	});*/
+	
 };
