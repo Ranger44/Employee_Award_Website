@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <title>Admin Page</title>
+
+    <link href="/admin.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/admin-script.js"></script>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Admin Page</h1>
+        <p>Control database of WEB 3 Project</p>
+    </div>
+
+    <div id="body_menu">
+        <ul>
+            <li><a href="admin_award" class="active">Award</a></li>
+            <li><a href="admin_employee">Employee</a></li>
+            <li><a href="admin_account">Account</a></li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="leftcolumn">
+            <div class="card">
+                <h2>AWARD INFORMATION</h2>
+                <h5>A Table display award from database</h5>
+                <div class="leftcontent" style="height:400px;">
+                    <table id="award_table" style="margin:5%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Delete</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee_body">
+                            {{#data.award}}
+                            <tr>
+                                <td id="id">{{id}}</td>
+                                <td id="name">{{name}}</td>
+                                <td id="address">{{description}}</td>
+                                <td id="delete"> <input type="button" value="delete" onClick="delete_row_award(this)" /></td>
+                                <td id="edit"> <input type="button" value="edit" onClick="edit_row_award(this)" /></td>
+                            </tr>
+                            {{/data.award}}
+                        </tbody>
+                    </table>
+
+
+                </div>
+                <p>Some text..</p>
+            </div>
+
+            
+
+            <div class="card">
+                <h2>Add a new award</h2>
+                <div style="height:300px; color:white">
+                    <form action="http://flip2.engr.oregonstate.edu:4247/admin_insert_aw">
+                        <fieldset>
+                            <legend style="color:black">Add a new award:</legend>
+                            <br />
+                            <label style="color:black">
+                                Name:<br />
+                                <input id="name_id" type="text" name="name" size="30" maxlength="100">
+                            </label>
+                            <br />
+                            <label style="color:black">
+                                Description: <br />
+                                <textarea id="description_id" name="description" cols="50" rows="5" maxlength="250">Enter some text...</textarea>
+                            </label>
+                            <br /> <br />
+                            <input type="submit" id="add_ad_submit">
+                        </fieldset>
+                    </form>
+                </div>
+                <p>Some text..</p>
+            </div>
+        </div>
+        <div class="rightcolumn">
+            <div class="card">
+                <h2>About Me</h2>
+                <div class="img" style="height:100px;">Image</div>
+                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            </div>
+            <div class="card">
+                <h3>Popular Post</h3>
+                <div class="img"><p>Image</p></div>
+                <div class="img"><p>Image</p></div>
+                <div class="img"><p>Image</p></div>
+            </div>
+            <div class="card">
+                <h3>Follow Me</h3>
+                <p>Some text..</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <h2>Footer</h2>
+    </div>
+</body>
+</html>

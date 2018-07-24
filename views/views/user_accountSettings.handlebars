@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>User - Account Settings</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	
+	<link href="css/web3.css" rel="stylesheet">
+			
+  </head>
+
+  <body>
+	<div class="jumbotron jumbotron-fluid " > 
+		<div class="container" style="color:white">
+			<h1 class="display-3"><b>Account Settings</b></h1>
+		</div>
+	</div>
+
+	{{> navbar}}
+	
+	
+	<form class="form-user" method="post" action='/updateSettings'>
+	  <div class="form-group row">
+
+	  	<!-- First Name -->
+		<label for="currentName" class="col-sm-4 col-form-label">First Name:</label>
+		<div class="col-sm-8">
+		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{fname}}>
+		</div>
+
+		<!-- Last Name -->
+		<label for="currentName" class="col-sm-4 col-form-label">First Name:</label>
+		<div class="col-sm-8">
+		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{lname}}>
+		</div>
+
+		<!-- Email -->
+		<label for="currentName" class="col-sm-4 col-form-label">Email:</label>
+		<div class="col-sm-8">
+		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{username}} >
+		</div>
+
+		<!-- Password -->
+		<label for="currentName" class="col-sm-4 col-form-label">Password:</label>
+		<div class="col-sm-8">
+		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{password}}>
+		</div>
+
+		<!-- Timestamp -->
+		 <p>Account Creation Date: {{timestamp}}</p>
+
+	  </div>
+	  <div class="form-group row">
+		<label for="inputPassword" class="col-sm-4 col-form-label">Change Name</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" id="nameChange" placeholder="First Name" name ="fname" required>
+		  <input type="text" class="form-control" id="nameChange" placeholder="Last Name" name="lname" required>
+		  <input type="hidden" name="id" value={{this.id}}>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<div class="col-sm-10">
+		  <button type="submit" class="btn btn-secondary">Submit</button>
+		</div>
+	  </div>
+	</form>
+	
+	
+	<form class="form-user" id="upload-image-form" action="" method="post" enctype="multipart/form-data">
+	<p class="lead">Select a PNG or JPEG image</p>
+	  <div id="image-preview-div" style="display: none">
+		<label for="exampleInputFile">Selected image:</label>
+		<br>
+		<img id="preview-img" src="noimage">
+	  </div>
+	  <div class="form-group">
+		<input type="file" name="file" id="file" required>
+	  </div>
+	  <button class="btn btn-secondary" id="upload-button" type="submit">Upload Image</button>
+	</form>
+	
+  </body>
+</html>
