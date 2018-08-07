@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -27,35 +27,35 @@
     <div class="row">
         <div class="leftcolumn">
             <div class="card">
-                <h2>EMPLOYEE INFORMATION</h2>
-                <h5>Title description, Dec 7, 2017</h5>
+                <h2>AWARD OF EMPLOYEE</h2>
+                {{#data.nameEmployee}}
+                <h5>Name of Employee: {{firstName}} {{lastName}}</h5>
+                {{/data.nameEmployee}}
                 <div class="leftcontent" style="height: auto; overflow:auto">
-                    <table id="employee_table" style="margin:5%">
+                    <table id="award_table" style="margin:5%">
                         <thead>
                           <tr>
-                              <th>ID</th>
-                              <th>First Name</th>
-                              <th>Last Name</th>
-                              <th>Email</th>
-                              <th>address</th>
-                              <th>View</th>
+                              <th style ="display:none">ID</th>
+                              <th>AwardID</th>
+                              <th>Name</th>
+                              <th>Description</th>
+                              <th>Date</th>
                               <th>Delete</th>
-                              <th>Edit</th>
+
                           </tr>
                         </thead>
                         <tbody>
-                            {{#data.employeeData}}
+                            {{#data.awardData}}
                               <tr>
-                                  <td>{{id}}</td>
-                                  <td>{{firstname}}</td>
-                                  <td>{{lastname}}</td>
-                                  <td>{{email}}</td>
-                                  <td>{{address}}</td>
-                                  <td><input type="button" value="View" onclick = "view_row_en(this)"></input</td>
-                                  <td><input type="button" value="Delete" onclick="delete_row_en(this)"></input</td>
-                                  <td><input type="button" value="Edit" onclick="edit_row_en(this)"></input</td>
+                                  <td style ="display:none">{{id}}</td>
+                                  <td>{{idaward}}</td>
+                                  <td>{{name}}</td>
+                                  <td>{{description}}</td>
+                                  <td>{{date}}</td>
+                                  <td><input type="button" value="Delete" onclick="delete_row_en_aw(this)"></input</td>
+
                               </tr>
-                            {{/data.employeeData}}
+                            {{/data.awardData}}
                         </tbody>
                     </table>
                     <br>
@@ -69,33 +69,38 @@
                 <p>Some text..</p>
             </div>
             <div class="card" id="add_em">
-                <h2>Add new employee</h2>
+                <h2>Add new Award</h2>
                 <div style="height: auto; color: white">
-                    <form action="http://flip2.engr.oregonstate.edu:4247/admin_insert_em">
+                    <form action="http://flip2.engr.oregonstate.edu:4247/admin_insert_em_aw">
                         <fieldset>
-                            <legend style="color:black">Add a new Employee:</legend>
+                            {{#data.nameEmployee}}
+                            <legend style="color:black">Add a new Award for Employee: {{firstName}} {{lastName}}</legend>
                             <br />
+                            <label style="display: none">
+                                  <input id="id_in" type="number" name="id" size="30" maxlength="100" value={{id}}>
+                            </label>
+
+                            <label style="display: none">
+                                  <input id="id_first" type="text" name="first" size="30" maxlength="100" value={{firstName}}>
+                            </label>
+
+                            <label style="display: none">
+                                 <input id="id_last" type="text" name="last" size="30" maxlength="100" value={{lastName}}>
+                            </label>
+
+                            {{/data.nameEmployee}}
                             <label style="color:black">
-                                First Name:<br />
-                                <input id="firstname_id" type="text" name="firstname" size="30" maxlength="100">
+                                 Choose Award:<br />
+                                 <select id="sel1" name="award">
+                                        {{#data.award}}
+                                          <option value={{id}}>{{name}}</option>
+                                        {{/data.award}}
+                                 </select>
+
                             </label>
                             <br />
-                            <label style="color:black">
-                                Last Name:<br />
-                                <input id="lastname_id" type="text" name="lastname" size="30" maxlength="100">
-                            </label>
-                            <br />
-                            <label style="color:black">
-                                Email:<br />
-                                <input id="email_id" type="text" name="email" size="30" maxlength="100">
-                            </label>
-                            <br />
-                            <label style="color:black">
-                                Address:<br />
-                                <input id="address_id" type="text" name="address" size="30" maxlength="100">
-                            </label>
-                            <br /> <br />
-                            <input type="submit" id="add_em_submit">
+
+                            <input type="submit" id="add_em_aw_submit">
                         </fieldset>
                     </form>
               </div>

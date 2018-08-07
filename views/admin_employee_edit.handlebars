@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <title>Admin Page</title>
+
+    <link href="/admin.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/admin-script.js"></script>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Admin Page</h1>
+        <p>Control database of WEB 3 Project</p>
+    </div>
+
+    <div id="body_menu">
+        <ul>
+            <li><a href="admin_award">Award</a></li>
+            <li><a href="admin_employee" class="active">Employee</a></li>
+            <li><a href="admin_account">Account</a></li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="leftcolumn">
+
+            <div class="card" id="div_edit">
+                <h2>Edit Employee</h2>
+                <div style="height:300px; color:white">
+                    <form action="http://flip2.engr.oregonstate.edu:4247/admin_update_en">
+                        <fieldset>
+                          <legend style="color:black">Add a new Employee:</legend>
+                          <br />
+                          <label style="display: none">
+                              <input id="id_in" type="number" name="id" size="30" maxlength="100" value={{id}} />
+                          </label>
+                          <br />
+                          <label style="color:black">
+                              First Name:<br />
+                              <input id="firstname_id" type="text" name="firstname" size="30" maxlength="100" value="{{firstname}}">
+                          </label>
+                          <br />
+                          <label style="color:black">
+                              Last Name:<br />
+                              <input id="lastname_id" type="text" name="lastname" size="30" maxlength="100" value="{{lastname}}">
+                          </label>
+                          <br />
+                          <label style="color:black">
+                              Email:<br />
+                              <input id="email_id" type="text" name="email" size="30" maxlength="100" value="{{email}}">
+                          </label>
+                          <br />
+                          <label style="color:black">
+                              Address:<br />
+                              <input id="address_id" type="text" name="address" size="30" maxlength="100" value="{{address}}">
+                          </label>
+                          <br /> <br />
+                          <input type="submit" id="edit_em_submit">
+                        </fieldset>
+                    </form>
+                </div>
+                <p>Some text..</p>
+            </div>
+
+
+        </div>
+        <div class="rightcolumn">
+            <div class="card">
+                <h2>About Me</h2>
+                <div class="img" style="height:100px;">Image</div>
+                <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            </div>
+            <div class="card">
+                <h3>Popular Post</h3>
+                <div class="img"><p>Image</p></div>
+                <div class="img"><p>Image</p></div>
+                <div class="img"><p>Image</p></div>
+            </div>
+            <div class="card">
+                <h3>Follow Me</h3>
+                <p>Some text..</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <h2>Footer</h2>
+    </div>
+</body>
+</html>

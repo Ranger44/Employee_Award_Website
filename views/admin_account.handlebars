@@ -27,10 +27,47 @@
     <div class="row">
         <div class="leftcolumn">
             <div class="card">
-                <h2>ACCOUNT INFORMATION</h2>
-                <h5>Title description, Dec 7, 2017</h5>
-                <div class="img" style="height:200px;">Image</div>
-                <p>Some text..</p>
+              <h2>ACCOUNT INFORMATION</h2>
+              <h5>Title description, Dec 7, 2017</h5>
+              <div class="leftcontent" style="height: auto; overflow:auto">
+                  <table id="employee_table" style="margin:5%">
+                      <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Timestamp</th>
+                            <th>Delete</th>
+                            <th>Edit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {{#data.accountData}}
+                            <tr>
+                                <td>{{id}}</td>
+                                <td>{{fname}}</td>
+                                <td>{{lname}}</td>
+                                <td>{{username}}</td>
+                                <td>{{password}}</td>
+                                <td>{{timestamp}}</td>
+
+                                <td><input type="button" value="Delete" onclick="delete_row_en(this)"></input</td>
+                                <td><input type="button" value="Edit" onclick="edit_row_en(this)"></input</td>
+                            </tr>
+                          {{/data.accountData}}
+                      </tbody>
+                  </table>
+                  <br>
+                  <!--
+                  <div id="div_each_em" width: 100% padding: 20px; style="margin: 5%; visibility: hidden">
+                  {{#data.eachEmployee}}
+                  <p>Table Award of employee: {{firstname}} {{lastname}}</p>
+                  {{/data.eachEmployee}}
+                  <div> -->
+              </div>
+              <p>Some text..</p>
             </div>
             <div class="card" id="card_id" style="display:none">
                 <h2>TITLE HEADING</h2>
