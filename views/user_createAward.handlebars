@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>User - Create New Award</title>
+
+	<!--  jQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<!-- Bootstrap Date-Picker Plugin -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+	
+	<link href="css/web3.css" rel="stylesheet">
+	
+	<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'mm/dd/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+	</script>
+		
+  </head>
+
+  <body>
+	<div class="jumbotron jumbotron-fluid " >
+		<div class="container" style="color:white">
+			<h1 class="display-3"><b>Create New Award</b></h1>
+		</div>
+	</div>
+
+	{{> navbar}}
+	
+	<form class="form-user" method="post" action='/create'>
+	  <div class="form-group row">
+
+	  	<!-- Name -->
+		<label for="nameOnAward" class="col-sm-3 col-form-label">Name</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" id="nameOnAward" name="name" placeholder="Name" required>
+		</div>
+	  </div>
+
+	  <!-- Award -->
+	  <div class="form-group row">
+		<label for="title" class="col-sm-3 col-form-label">Award Type</label>
+		<div class="col-sm-10">
+		  <select class="form-control" name="title">
+					{{#each rows}}
+					<option value="{{title}}">{{title}}</option>
+					{{/each}}
+			</select>
+		</div>
+	  </div>
+
+	  <!-- Email -->
+	    <div class="form-group row">
+			<label for="inputEmail3" class="col-sm-3 col-form-label">Email</label>
+			<div class="col-sm-10">
+			  <input type="email" class="form-control" id="inputEmail3" name="email" placeholder="Email" required>
+			</div>
+		</div>
+
+		<!-- Date input -->
+		  <div class="form-group row"> 
+			<label  for="date" class="col-sm-4 col-form-label">Date Awarded</label>
+			<div class="col-sm-10">
+				<input type="text"class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" required>
+			</div>
+		  </div>
+
+		  <div class="form-group row">
+			<div class="col-sm-10">
+			  <button type="submit" class="btn btn-secondary">Submit</button>
+			</div>
+		  </div>
+	</form>
+  </body>
+</html>

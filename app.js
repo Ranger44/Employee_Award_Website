@@ -103,6 +103,27 @@ app.get('/reports',function(req,res){
 	})	
 });
 
+app.get('/create',function(req,res){
+	mysql.pool.query('SELECT title FROM award', function(err, rows, fields){
+		context = {rows};
+		res.render("user_createAward", context);
+	})
+});
+
+app.post('/create',function(req,res){
+	title = (req.body.title === "Employee of the Month") ? 1 : 2;
+	console.log(title);
+	console.log(req.body);
+	mysql.pool.query("INSERT INTO account_award (`account_id`, `award_id`, `name`, `email`, `time`) VALUES (?,?,?,?,?)",
+		[req.session.user_id, title, req.body.name, req.body.email, req.body.time], function(err, result){
+			if(err){
+				next(err);
+				return;
+			}
+		})
+ 	res.redirect("/create");
+});
+
 app.post('/deleteReward' ,function(req,res){
 	mysql.pool.query('DELETE FROM account_award WHERE id=?', [req.body.id], function(err,rows,fields){
 		if(err){
