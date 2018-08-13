@@ -5,6 +5,9 @@ var handlebars = require('express-handlebars');
 var bodyParser = require("body-parser");
 var nodemailer = require('nodemailer');
 var session = require("express-session");
+var fs = require('fs');
+var multer  = require('multer');
+var upload = multer({ dest: '/tmp/'});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -76,6 +79,8 @@ app.get('/settings',function(req,res){
 	var context={};
 	mysql.pool.query('SELECT * FROM user_account WHERE id=?', [req.session.user_id], function(err, rows, fields){
 		context=rows[0];
+		context.image = "css/signatures/" + req.session.user_id + "/" + context.signature;
+		console.log(context.image);
 		res.render("user_accountSettings", context);
 	})	
 });
@@ -133,6 +138,37 @@ app.post('/deleteReward' ,function(req,res){
 		res.redirect('/reports');
 	})
 });
+
+app.post('/image', upload.single("file"), function (req, res) {
+	if (!fs.existsSync(__dirname + "/public/css/signatures/" + req.session.user_id)) {
+		fs.mkdirSync(__dirname + "/public/css/signatures/" + req.session.user_id);
+	}
+   var file = __dirname + "/public/css/signatures/" + req.session.user_id + "/"+ req.file.originalname;
+   fs.readFile(req.file.path, function (err, data) {
+        fs.writeFile(file, data, function (err) {
+         if( err ){
+              console.error( err );
+              response = {
+                   message: 'Sorry, file couldn\'t be uploaded.',
+                   filename: req.file.originalname
+              };
+         }else{
+               response = {
+                   message: 'File uploaded successfully',
+                   filename: req.file.originalname
+              };
+          }
+       });
+   });
+   mysql.pool.query('UPDATE user_account SET signature=? WHERE id=?',
+   	[req.file.originalname, req.session.user_id], function(err, result){
+   		if(err){
+   			next(err);
+   			return;
+   		}
+   	res.redirect("settings");
+   	})
+})
 
 app.get('/forgot_password',function(req,res){
  	res.render("forgot_password");

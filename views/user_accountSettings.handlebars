@@ -22,6 +22,8 @@
 	</div>
  	{{> navbar}}
 	
+	<p>{{status}}</p>
+
 	<form class="form-user" method="post" action='/updateSettings'>
 	  <div class="form-group row">
  	  	<!-- First Name -->
@@ -30,7 +32,7 @@
 		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{fname}}>
 		</div>
  		<!-- Last Name -->
-		<label for="currentName" class="col-sm-4 col-form-label">First Name:</label>
+		<label for="currentName" class="col-sm-4 col-form-label">Last Name:</label>
 		<div class="col-sm-8">
 		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{lname}}>
 		</div>
@@ -44,9 +46,15 @@
 		<div class="col-sm-8">
 		  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={{password}}>
 		</div>
+		<!-- Signature -->
+		<label for="currentName" class="col-sm-4 col-form-label">Signature:</label>
+		<div class="col-sm-8">
+		  <img src={{image}}>
+		</div>
  		<!-- Timestamp -->
 		 <p>Account Creation Date: {{timestamp}}</p>
  	  </div>
+
 	  <div class="form-group row">
 		<label for="inputPassword" class="col-sm-4 col-form-label">Change Name</label>
 		<div class="col-sm-10">
@@ -63,12 +71,13 @@
  	</form>
  	
  	
- 	<form class="form-user" id="upload-image-form" action="" method="post" enctype="multipart/form-data">
- 	<p class="lead">Select a PNG or JPEG image</p>
+ 	<form class="form-user" id="upload-image-form" action="/image" method="post" enctype="multipart/form-data">
+ 	<p class="lead">Change Signature (PNG or JPEG image)</p>
+ 	<div id="message"></div>
  	  <div id="image-preview-div" style="display: none">
  		<label for="exampleInputFile">Selected image:</label>
  		<br>
- 		<img id="preview-img" src="noimage">
+ 		<img id="preview-img" name="image" src="noimage">
  	  </div>
  	  <div class="form-group">
  		<input type="file" name="file" id="file" required>
@@ -76,3 +85,5 @@
  	  <button class="btn btn-secondary" id="upload-button" type="submit">Upload Image</button>
  	</form>
  	
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="upload-image.js"></script>
