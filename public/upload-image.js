@@ -2,7 +2,7 @@
 function noPreview() {
   $('#image-preview-div').css("display", "none");
   $('#preview-img').attr('src', 'noimage');
-  $('upload-button').attr('disabled', '');
+  $('#upload-button').attr('disabled', '');
 }
 
 function selectImage(e) {
@@ -18,34 +18,15 @@ $(document).ready(function (e) {
 
   $('#max-size').html((maxsize/1024).toFixed(2));
 
-  $('#upload-image-form').on('submit', function(e) {
-
-    e.preventDefault();
-
-    $('#message').empty();
-    $('#loading').show();
-
-    $.ajax({
-      url: "upload-image.php",
-      type: "POST",
-      data: new FormData(this),
-      contentType: false,
-      cache: false,
-      processData: false,
-      success: function(data)
-      {
-        $('#loading').hide();
-        $('#message').html(data);
-      }
-    });
-
-  });
 
   $('#file').change(function() {
+
+    console.log("changed");
 
     $('#message').empty();
 
     var file = this.files[0];
+    console.log(file);
     var match = ["image/jpeg", "image/png", "image/jpg"];
 
     if ( !( (file.type == match[0]) || (file.type == match[1]) || (file.type == match[2]) ) )
