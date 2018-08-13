@@ -56,7 +56,6 @@ app.post('/',function(req,res){
 			next(err);
 			return;
 		}
-		//console.log(rows[0]);
 		context = rows[0];
 
 		// User is not in database or password is incorrect
@@ -68,9 +67,13 @@ app.post('/',function(req,res){
 
 		// User login successful
 		else {
-			console.log("login successful");
 			req.session.user_id = context.id;
-			res.redirect('/settings');
+			if (context.type === 1) {	//admin user
+				res.redirect('/admin_welcome');
+			}
+			else {
+				res.redirect('/settings');
+			}
 		}
 	})
 });
@@ -80,7 +83,6 @@ app.get('/settings',function(req,res){
 	mysql.pool.query('SELECT * FROM user_account WHERE id=?', [req.session.user_id], function(err, rows, fields){
 		context=rows[0];
 		context.image = "css/signatures/" + req.session.user_id + "/" + context.signature;
-		console.log(context.image);
 		res.render("user_accountSettings", context);
 	})	
 });
@@ -103,7 +105,6 @@ app.get('/reports',function(req,res){
 					+' INNER JOIN award ON account_award.award_id = award.id'
 					+' WHERE user_account.id = ?', [req.session.user_id], function(err, rows, fields){
 		context = {rows};
-		console.log(context);
 		res.render("user_welcome", context);
 	})	
 });
@@ -117,8 +118,6 @@ app.get('/create',function(req,res){
 
 app.post('/create',function(req,res){
 	title = (req.body.title === "Employee of the Month") ? 1 : 2;
-	console.log(title);
-	console.log(req.body);
 	mysql.pool.query("INSERT INTO account_award (`account_id`, `award_id`, `name`, `email`, `time`) VALUES (?,?,?,?,?)",
 		[req.session.user_id, title, req.body.name, req.body.email, req.body.time], function(err, result){
 			if(err){
@@ -175,7 +174,6 @@ app.get('/forgot_password',function(req,res){
 });
 
 app.post('/sendPassword', function(req, res){
-	console.log(req.body.email);
 	var msg={};
 
 	mysql.pool.query('SELECT * FROM user_account WHERE username=?', [req.body.email], function(err, rows, fields){
@@ -204,6 +202,60 @@ app.post('/sendPassword', function(req, res){
   			});
  		}
 	})	
+})
+
+app.get('/admin_welcome', function(req,res){
+	mysql.pool.query('SELECT * FROM user_account', function(err, rows, fields){
+		for(var i = 0; i < rows.length; i++) {
+			if(rows[i].id === req.session.user_id) {
+				rows[i].isUser = 1;
+				break;
+			}
+			else {
+				rows[i].isUser = 0;
+			}
+		}
+		context = {rows};
+		res.render('admin_welcome', context);
+	})
+})
+
+app.get('/adminEdit', function(req,res){
+	mysql.pool.query('SELECT * FROM user_account WHERE id=?',
+		[req.query.id], function(err, rows, fields){
+			context = rows[0];
+			res.render('admin_editUser', context);
+	})
+})
+
+app.post('/adminEdit', function(req,res){
+	mysql.pool.query('SELECT * FROM user_account', function(err, rows, fields){
+		var validEmail = true;
+		for(var i = 0; i < rows.length; i++) {
+			if (req.body.email == rows[i].username && req.body.id != rows[i].id) {
+				validEmail = false;
+				break;
+			}
+		}
+		if(validEmail) {
+			mysql.pool.query('UPDATE user_account SET fname=?, lname=?, username=?, password=?, type=? WHERE id=?',
+				[req.body.fname, req.body.lname, req.body.email, req.body.password, req.body.userType, req.body.id], 
+					function(err, rows, fields){
+						if(err){
+							return;
+						}
+					res.redirect('/admin_welcome');
+				})
+		}
+		else {
+			mysql.pool.query('SELECT * FROM user_account WHERE id=?',
+				[req.body.id], function(err, rows, fields){
+					context = rows[0];
+					context.status = req.body.email + " is already registered to another user";
+					res.render('admin_editUser', context);
+			})
+		}
+	})
 })
 
 app.use(function(req,res){
