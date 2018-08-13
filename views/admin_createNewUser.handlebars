@@ -17,7 +17,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 	
-	<link href="web3.css" rel="stylesheet">
+	<link href="css/web3.css" rel="stylesheet">
 		
   </head>
 
@@ -30,39 +30,45 @@
 
 	{{> admin_navbar}}
 	
-	<form class="form-user" method="post">
+	<form class="form-user" method="post" action="/adminCreate">
+	{{status}}
 	  <div class="form-group row">
 		<label for="nameOnAward" class="col-sm-3 col-form-label">First Name</label>
 		<div class="col-sm-10">
-		  <input type="text" class="form-control" id="nameOnAward" placeholder="Name">
+		  <input type="text" class="form-control" id="nameOnAward" placeholder="Name" name="fname">
 		</div>
 	  </div>
 	  <div class="form-group row">
 		<label for="nameOnAward" class="col-sm-3 col-form-label">Last Name</label>
 		<div class="col-sm-10">
-		  <input type="text" class="form-control" id="nameOnAward" placeholder="Name">
+		  <input type="text" class="form-control" id="nameOnAward" placeholder="Name" name="lname">
 		</div>
 	  </div>
 	  <div class="form-group row">
-		<label for="awardTypeDropdown" class="col-sm-3 col-form-label">User Type</label>
+		<label for="awardTypeDropdown" class="col-sm-3 col-form-label">Permissions</label>
 		<div class="col-sm-10">
-		  <select class="form-control" name="awardTypeDropdown">
-					{{#each awardType}}
-					<option value="{{id}}">{{name}}</option>
-					{{/each}}
+		  <select class="form-control" name="userType" >
+					<option value="0">User</option>
+					<option value="1">Admin</option>
 				</select>
 		</div>
 	  </div>
 	    <div class="form-group row">
 			<label for="inputEmail3" class="col-sm-3 col-form-label">Email</label>
 			<div class="col-sm-10">
-			  <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+			  <input type="email" class="form-control" id="inputEmail3" name="email" placeholder="Email">
 			</div>
 		</div>
-		  <div class="form-group row"> <!-- Date input -->
+		  <div class="form-group row">
 			<label  for="date" class="col-sm-4 col-form-label">Password</label>
 			<div class="col-sm-10">
-				<input type="text"class="form-control" id="password" name="password" placeholder="Password">
+				<input type="text"class="form-control" id="password" name="password" placeholder="Password" minlength="5">
+			</div>
+		  </div>
+		  <div class="form-group row">
+			<label  for="date" class="col-sm-4 col-form-label">Confirm Password</label>
+			<div class="col-sm-10">
+				<input type="text"class="form-control" id="verifyPassword" placeholder="Confirm Password">
 			</div>
 		  </div>
 		  <div class="form-group row">
@@ -72,4 +78,5 @@
 		  </div>
 	</form>
   </body>
+  <script src="create_user.js"></script>
 </html>

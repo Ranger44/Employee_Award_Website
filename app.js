@@ -27,6 +27,13 @@ app.use(session({
 	saveUninitialized: true
 }));
 
+
+
+function checkIsUserLoggedIn(id) {
+	console.log(id);
+	return (id == -1 || id == undefined);
+}
+
 /*******************************************************
  NODEMAILER - for verification email on account creation
 ******************************************************/
@@ -43,8 +50,18 @@ let transporter = nodemailer.createTransport({
   }
 });
 
+
 app.get('/',function(req,res){
+  	res.redirect("/login");
+});
+
+app.get('/login',function(req,res){
   	res.render("index");
+});
+
+app.get('/logout',function(req,res){
+	req.session.user_id = -1;
+  	res.redirect("/login");
 });
 
 app.post('/',function(req,res){
@@ -79,12 +96,15 @@ app.post('/',function(req,res){
 });
 
 app.get('/settings',function(req,res){
-	var context={};
-	mysql.pool.query('SELECT * FROM user_account WHERE id=?', [req.session.user_id], function(err, rows, fields){
-		context=rows[0];
-		context.image = "css/signatures/" + req.session.user_id + "/" + context.signature;
-		res.render("user_accountSettings", context);
-	})	
+	if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+	else{
+		var context={};
+		mysql.pool.query('SELECT * FROM user_account WHERE id=?', [req.session.user_id], function(err, rows, fields){
+			context=rows[0];
+			context.image = "css/signatures/" + req.session.user_id + "/" + context.signature;
+			res.render("user_accountSettings", context);
+		})
+	}	
 });
 
 app.post('/updateSettings', function(req,res){
@@ -100,20 +120,26 @@ app.post('/updateSettings', function(req,res){
 })
 
 app.get('/reports',function(req,res){
-	mysql.pool.query('SELECT time, name, account_award.id, title, email FROM user_account'
-					+' INNER JOIN account_award ON user_account.id = account_award.account_id'
-					+' INNER JOIN award ON account_award.award_id = award.id'
-					+' WHERE user_account.id = ?', [req.session.user_id], function(err, rows, fields){
-		context = {rows};
-		res.render("user_welcome", context);
-	})	
+	if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+	else {
+		mysql.pool.query('SELECT time, name, account_award.id, title, email FROM user_account'
+						+' INNER JOIN account_award ON user_account.id = account_award.account_id'
+						+' INNER JOIN award ON account_award.award_id = award.id'
+						+' WHERE user_account.id = ?', [req.session.user_id], function(err, rows, fields){
+			context = {rows};
+			res.render("user_welcome", context);
+		})
+	}	
 });
 
 app.get('/create',function(req,res){
-	mysql.pool.query('SELECT title FROM award', function(err, rows, fields){
-		context = {rows};
-		res.render("user_createAward", context);
-	})
+	if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+	else {
+		mysql.pool.query('SELECT title FROM award', function(err, rows, fields){
+			context = {rows};
+			res.render("user_createAward", context);
+		})
+	}
 });
 
 app.post('/create',function(req,res){
@@ -205,27 +231,33 @@ app.post('/sendPassword', function(req, res){
 })
 
 app.get('/admin_welcome', function(req,res){
-	mysql.pool.query('SELECT * FROM user_account', function(err, rows, fields){
-		for(var i = 0; i < rows.length; i++) {
-			if(rows[i].id === req.session.user_id) {
-				rows[i].isUser = 1;
-				break;
+	if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+	else{
+		mysql.pool.query('SELECT * FROM user_account', function(err, rows, fields){
+			for(var i = 0; i < rows.length; i++) {
+				if(rows[i].id === req.session.user_id) {
+					rows[i].isUser = 1;
+					break;
+				}
+				else {
+					rows[i].isUser = 0;
+				}
 			}
-			else {
-				rows[i].isUser = 0;
-			}
-		}
-		context = {rows};
-		res.render('admin_welcome', context);
-	})
+			context = {rows};
+			res.render('admin_welcome', context);
+		})
+	}
 })
 
 app.get('/adminEdit', function(req,res){
-	mysql.pool.query('SELECT * FROM user_account WHERE id=?',
-		[req.query.id], function(err, rows, fields){
-			context = rows[0];
-			res.render('admin_editUser', context);
-	})
+	if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+	else {
+		mysql.pool.query('SELECT * FROM user_account WHERE id=?',
+			[req.query.id], function(err, rows, fields){
+				context = rows[0];
+				res.render('admin_editUser', context);
+		})
+	}
 })
 
 app.post('/adminEdit', function(req,res){
@@ -257,6 +289,54 @@ app.post('/adminEdit', function(req,res){
 		}
 	})
 })
+
+app.post('/adminDelete', function(req,res){
+	console.log(req.body.id);
+	mysql.pool.query('DELETE FROM user_account WHERE id=?',
+		[req.body.id], function(err, rows, fields){
+			if(err){
+				next(err);
+				return;
+			}
+			res.redirect('/admin_welcome');
+	})
+})
+
+app.get('/adminCreate',function(req,res){
+	if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+	else {
+		checkIsUserLoggedIn(req.session.user_id);
+  		res.render("admin_createNewUser");
+  	}
+});
+
+app.post('/adminCreate',function(req,res){
+	console.log(req.body);
+	mysql.pool.query('SELECT * FROM user_account', function(err, rows, fields){
+		var validEmail = true;
+		for(var i = 0; i < rows.length; i++) {
+			if (req.body.email == rows[i].username) {
+				validEmail = false;
+				break;
+			}
+		}
+		console.log(validEmail);
+		if(validEmail) {
+			mysql.pool.query('INSERT INTO user_account (`fname`, `lname`, `username`, `password`, `type`) VALUES (?,?,?,?,?)',
+				[req.body.fname, req.body.lname, req.body.email, req.body.password, req.body.userType], 
+					function(err, rows, fields){
+						if(err){
+							return;
+						}
+					res.redirect('/admin_welcome');
+				})
+		}
+		else {
+			context.status = req.body.email + " is already registered to another user";
+			res.render('admin_createNewUser', context);
+		}
+	})
+});
 
 app.use(function(req,res){
 	res.render("404")
