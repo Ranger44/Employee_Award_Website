@@ -18,7 +18,7 @@ app.set('mysql', mysql);
 app.engine('handlebars', handlebars({
     defaultLayout: 'main',
 // Use helper functions if needed
-//helpers: require(__dirname + "/public/js/helpers.js").helpers,      
+//helpers: require(__dirname + "/public/js/helpers.js").helpers,
     partialsDir: __dirname + '/views/partials'
 }));
 app.use(session({
@@ -67,7 +67,7 @@ app.get('/logout',function(req,res){
 app.post('/',function(req,res){
 	var context = {};
 	var msg = {};
-	mysql.pool.query('SELECT * FROM user_account WHERE username=? AND password=?', 
+	mysql.pool.query('SELECT * FROM user_account WHERE username=? AND password=?',
 		[req.body.email, req.body.password], function(err, rows, fields){
 		if(err){
 			next(err);
@@ -104,7 +104,7 @@ app.get('/settings',function(req,res){
 			context.image = "css/signatures/" + req.session.user_id + "/" + context.signature;
 			res.render("user_accountSettings", context);
 		})
-	}	
+	}
 });
 
 app.post('/updateSettings', function(req,res){
@@ -129,7 +129,7 @@ app.get('/reports',function(req,res){
 			context = {rows};
 			res.render("user_welcome", context);
 		})
-	}	
+	}
 });
 
 app.get('/create',function(req,res){
@@ -213,7 +213,7 @@ app.post('/sendPassword', function(req, res){
 			let HelperOptions = {
     			from: '"Group9" <noreply.group9@gmail.com',
     			to: req.body.email,
-    			subject: 'Password Retriever',                                                                                         
+    			subject: 'Password Retriever',
     			text: 'Your password is: ' + context.password
   			};
 
@@ -224,10 +224,10 @@ app.post('/sendPassword', function(req, res){
     			else {
     				msg.status = "Password has been sent";
     				res.render("forgot_password", msg);
-    			}	
+    			}
   			});
  		}
-	})	
+	})
 })
 
 app.get('/admin_welcome', function(req,res){
@@ -271,7 +271,7 @@ app.post('/adminEdit', function(req,res){
 		}
 		if(validEmail) {
 			mysql.pool.query('UPDATE user_account SET fname=?, lname=?, username=?, password=?, type=? WHERE id=?',
-				[req.body.fname, req.body.lname, req.body.email, req.body.password, req.body.userType, req.body.id], 
+				[req.body.fname, req.body.lname, req.body.email, req.body.password, req.body.userType, req.body.id],
 					function(err, rows, fields){
 						if(err){
 							return;
@@ -323,7 +323,7 @@ app.post('/adminCreate',function(req,res){
 		console.log(validEmail);
 		if(validEmail) {
 			mysql.pool.query('INSERT INTO user_account (`fname`, `lname`, `username`, `password`, `type`) VALUES (?,?,?,?,?)',
-				[req.body.fname, req.body.lname, req.body.email, req.body.password, req.body.userType], 
+				[req.body.fname, req.body.lname, req.body.email, req.body.password, req.body.userType],
 					function(err, rows, fields){
 						if(err){
 							return;
@@ -337,6 +337,21 @@ app.post('/adminCreate',function(req,res){
 		}
 	})
 });
+app.use('/adminreport',function(req,res,next){
+  if (checkIsUserLoggedIn(req.session.user_id)) res.redirect("/login");
+  else{
+      res.render('admin_report');
+  }
+});
+
+
+app.use('/getAwardData',function(req,res,next){
+	createJsonAward(req,res,next);
+});
+
+app.use('/getAccountData',function(req,res,next){
+	createJsonAccount(req,res,next);
+});
 
 app.use(function(req,res){
 	res.render("404")
@@ -348,6 +363,84 @@ app.use(function(err, req, res, next){
 });
 
 app.listen(app.get('port'), function(){
-  	console.log('Express started on http://localhost:' + app.get('port') + 
+  	console.log('Express started on http://localhost:' + app.get('port') +
     '; press Ctrl-C to terminate.');
 });
+
+
+var createJsonAward = function(req,res,next){
+
+	mysql.pool.query("SELECT aw.title, COUNT(ac.award_id) as number from account_award ac RIGHT JOIN award aw ON ac.award_id = aw.id GROUP BY aw.id",
+		function(err,datarows){
+			if(err){
+				console.log(err);
+				return;
+			}else{
+						var content={
+								cols:[],
+								rows:[]
+						};
+						content.cols.push({id: "",label: "Topping",pattern: "",type:"string"});
+						content.cols.push({id: "",label: "Slices",pattern:  "",type:"number"});
+
+						for(row in datarows){
+							var dataRow={
+								c:[]
+							};
+							dataRow.c.push({v: datarows[row].title,f: null});
+							dataRow.c.push({v: datarows[row].number,f: null});
+							var json1 = JSON.stringify(dataRow);
+
+							content.rows.push(dataRow);
+						}
+						var json = JSON.stringify(content);
+						res.send(json);
+			}
+		}
+	);
+  //Format of Json
+	// contentSample = {
+	// 				"cols": [
+	// 							{"id":"","label":"Topping","pattern":"","type":"string"},
+	// 							{"id":"","label":"Slices","pattern":"","type":"number"}
+	// 						],
+	// 				"rows": [
+	// 							{"c":[{"v":"Mushrooms","f":null},{"v":1,"f":null}]},
+	// 							{"c":[{"v":"Onions","f":null},{"v":2,"f":null}]},
+	// 							{"c":[{"v":"Olives","f":null},{"v":3,"f":null}]},
+	// 							{"c":[{"v":"Zucchini","f":null},{"v":4,"f":null}]},
+	// 							{"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
+	// 						]
+	// 	}
+
+}
+
+var createJsonAccount = function(req,res,next){
+	mysql.pool.query("SELECT a.fname as firstname, a.lname as lastname, count(ac.award_id) as number FROM user_account a LEFT JOIN account_award ac ON a.id = ac.account_id GROUP BY a.fname",
+	function(err,datarows){
+		if(err){
+			console.log(err);
+			return;
+		}else{
+			var content={
+					cols:[],
+					rows:[]
+			};
+			content.cols.push({id: "",label: "Topping",pattern: "",type:"string"});
+			content.cols.push({id: "",label: "Slices",pattern:  "",type:"number"});
+
+			for(row in datarows){
+				var dataRow={
+					c:[]
+				};
+				dataRow.c.push({v: datarows[row].firstname,f: null});
+				dataRow.c.push({v: datarows[row].number,f: null});
+				var json1 = JSON.stringify(dataRow);
+
+				content.rows.push(dataRow);
+			}
+			var json = JSON.stringify(content);
+			res.send(json);
+		}
+	});
+}

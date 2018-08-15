@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>Admin - Reports</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+	<link href="css/web3.css" rel="stylesheet">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+// Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+
+      function drawChart() {
+            var jsonData = $.ajax({
+                url: "http://flip2.engr.oregonstate.edu:50113/getAwardData",
+                dataType: "json",
+                async: false
+                }).responseText;
+
+            // Create our data table out of JSON data loaded from server.
+            var data = new google.visualization.DataTable(jsonData);
+              // Set chart options
+            var optionsAwPie = {'title':'Award was earned from employee', 'width':400, 'height':300};
+            var optionsAwBar = {'title':'Award was earned from employee','width':1000,'height':300};
+            // Instantiate and draw our chart, passing in some options.
+            var chartAwardPie = new google.visualization.PieChart(document.getElementById('aw_pie_chart_div'));
+            chartAwardPie.draw(data, optionsAwPie);
+            var chartAwardBar = new google.visualization.BarChart(document.getElementById('aw_bar_chart_div'));
+            chartAwardBar.draw(data, optionsAwBar);
+            /***************
+              Account Table
+            ****************/
+            var jsonDataAccount = $.ajax({
+                url: "http://flip2.engr.oregonstate.edu:50113/getAccountData",
+                dataType: "json",
+                async: false
+                }).responseText;
+
+            // Create our data table out of JSON data loaded from server.
+            var dataAccount = new google.visualization.DataTable(jsonDataAccount);
+            // Set chart options
+            var optionsAcPie = {'title':'The Employee earned award','width':400,'height':300};
+            var optionsAcBar = {'title':'The Employee earned award','width':1000,'height':300};
+            var chartAccountPie = new google.visualization.PieChart(document.getElementById('ac_pie_chart_div'));
+            chartAccountPie.draw(dataAccount, optionsAcPie);
+            var chartAccountBar = new google.visualization.BarChart(document.getElementById('ac_bar_chart_div'));
+            chartAccountBar.draw(dataAccount, optionsAcBar);
+      }
+</script>
+  </head>
+
+  <body>
+	<div class="jumbotron jumbotron-fluid " >
+		<div class="container" style="color:white">
+			<h1 class="display-3"><b>Welcome</b></h1>
+		</div>
+	</div>
+
+	{{> admin_navbar}}
+
+	<br><div style="margin-left: 20px"><h3>Reports</h3></div>
+  <div style="margin-left: 20px">
+      <table class="columns">
+        <tr>
+          <td><div id="aw_pie_chart_div" style="border: 1px solid #ccc"></div></td>
+          <td><div id="aw_bar_chart_div" style="border: 1px solid #ccc"></div></td>
+        </tr>
+      </table>
+      <!--Table and divs that hold the pie charts-->
+        <table class="columns">
+          <tr>
+            <td><div id="ac_pie_chart_div" style="border: 1px solid #ccc"></div></td>
+            <td><div id="ac_bar_chart_div" style="border: 1px solid #ccc"></div></td>
+          </tr>
+        </table>
+  </div>
+
+  </body>
+</html>
