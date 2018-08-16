@@ -29,7 +29,7 @@
 
       function drawChart() {
             var jsonData = $.ajax({
-                url: "http://flip2.engr.oregonstate.edu:50113/getAwardData",
+                url: "/getAwardData",
                 dataType: "json",
                 async: false
                 }).responseText;
@@ -37,8 +37,8 @@
             // Create our data table out of JSON data loaded from server.
             var data = new google.visualization.DataTable(jsonData);
               // Set chart options
-            var optionsAwPie = {'title':'Award was earned from employee', 'width':400, 'height':300};
-            var optionsAwBar = {'title':'Award was earned from employee','width':1000,'height':300};
+            var optionsAwPie = {'title':'Awards Created', 'width':400, 'height':300};
+            var optionsAwBar = {'title':'Awards Created','width':1000,'height':300};
             // Instantiate and draw our chart, passing in some options.
             var chartAwardPie = new google.visualization.PieChart(document.getElementById('aw_pie_chart_div'));
             chartAwardPie.draw(data, optionsAwPie);
@@ -48,7 +48,7 @@
               Account Table
             ****************/
             var jsonDataAccount = $.ajax({
-                url: "http://flip2.engr.oregonstate.edu:50113/getAccountData",
+                url: "/getAccountData",
                 dataType: "json",
                 async: false
                 }).responseText;
@@ -56,8 +56,8 @@
             // Create our data table out of JSON data loaded from server.
             var dataAccount = new google.visualization.DataTable(jsonDataAccount);
             // Set chart options
-            var optionsAcPie = {'title':'The Employee earned award','width':400,'height':300};
-            var optionsAcBar = {'title':'The Employee earned award','width':1000,'height':300};
+            var optionsAcPie = {'title':'# of Awards Created by Employee','width':400,'height':300};
+            var optionsAcBar = {'title':'# of Awards Created by Employee','width':1000,'height':300};
             var chartAccountPie = new google.visualization.PieChart(document.getElementById('ac_pie_chart_div'));
             chartAccountPie.draw(dataAccount, optionsAcPie);
             var chartAccountBar = new google.visualization.BarChart(document.getElementById('ac_bar_chart_div'));
