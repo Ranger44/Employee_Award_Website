@@ -1,0 +1,37 @@
+\documentclass{slides}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[landscape, top=.2in]{geometry}
+\usepackage{csvsimple}
+\usepackage{graphicx}
+
+\newcommand*\wildcard[2][7cm]{%
+ \mbox{%
+  \vbox to 3cm{%
+   \vfill
+    \hbox to #1{\strut\hfil#2\hfil}
+  }
+ }
+}
+
+\begin{document}
+\centering
+    \includegraphics[scale=.75]{small-Oregon_State_Beavers_logo.png}\\
+\large{In honor of outstanding job performance}\\
+\vspace{.2in}\normalsize{this Certificate for}\\
+\csvreader{data.csv}{firstname=\firstname,lastname=\lastname,email=\email,title=\title,date=\date}
+{\vspace{-.3in}\Large{Employee of the \title}\\
+\vspace{.4in}\normalsize{is awarded to}\\
+\vspace{-.3in}\LARGE{\firstname\ \lastname}
+
+\begingroup
+ \centering
+  \wildcard{\normalsize{Date: \date}}
+   \hspace{3cm}
+  \wildcard{\normalsize{Awarded by:}}
+ \par
+\endgroup
+
+}
+
+\end{document}

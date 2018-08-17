@@ -143,14 +143,23 @@ app.get('/create',function(req,res){
 });
 
 app.post('/create',function(req,res){
-	title = (req.body.title === "Employee of the Month") ? 1 : 2;
-	mysql.pool.query("INSERT INTO account_award (`account_id`, `award_id`, `name`, `email`, `time`) VALUES (?,?,?,?,?)",
-		[req.session.user_id, title, req.body.name, req.body.email, req.body.time], function(err, result){
-			if(err){
-				next(err);
-				return;
+	//title = (req.body.title === "Employee of the Month") ? 1 : 2;
+	//mysql.pool.query("INSERT INTO account_award (`account_id`, `award_id`, `name`, `email`, `time`) VALUES (?,?,?,?,?)",
+	//	[req.session.user_id, title, req.body.name, req.body.email, req.body.time], function(err, result){
+	//		if(err){
+	//			next(err);
+	//			return;
+	//		}
+	//	})
+	const exec = require('child_process').exec;
+	var script = exec('bash bash_retr.sh', 
+		(error, stdout, stderr) => {
+			console.log(`${stdout}`);
+			console.log(`${stderr}`);
+			if (error !== null) {
+				console.log(`exec error: ${error}`);
 			}
-		})
+		});
  	res.redirect("/create");
 });
 
