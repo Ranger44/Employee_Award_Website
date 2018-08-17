@@ -26,7 +26,6 @@
 				<td><b>Name</b></td>
 				<td><b>Award Type</b></td>
 				<td><b>Email</b></td>
-				<td><b>Print Award</b></td>
 				<td><b>Delete Award</b></td>
 			</tr>
 		</thead>
@@ -37,7 +36,6 @@
 				<td>{{this.name}}</td>
 				<td>{{this.title}}</td>
 				<td>{{this.email}}</td>
-				<td><button>Print</button></td>
 				<form action="/deleteReward" method="POST">
 					<td><button name="id" value={{id}}>Delete</button></td>
 				</form>
